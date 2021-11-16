@@ -2,12 +2,6 @@ const app = require("express")();
 const server = require("http").createServer(app);
 const cors = require("cors");
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -21,14 +15,14 @@ const io = require("socket.io")(server, {
 //   })
 // );
 
-// app.use(function (request, response, next) {
-//   response.header("Access-Control-Allow-Origin", "*");
-//   response.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
+app.use(function (request, response, next) {
+  response.header("Access-Control-Allow-Origin", "*");
+  response.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 const PORT = process.env.PORT || 5000;
 
@@ -37,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
+  console.log("id connected ", socket.id);
   socket.emit("me", socket.id);
 
   socket.on("callUser", ({ userToCall, signalData, from, name }) => {
