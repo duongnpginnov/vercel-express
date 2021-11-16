@@ -2,6 +2,12 @@ const app = require("express")();
 const server = require("http").createServer(app);
 const cors = require("cors");
 
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -9,11 +15,20 @@ const io = require("socket.io")(server, {
   },
 });
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+// app.use(
+//   cors({
+//     origin: "*",
+//   })
+// );
+
+// app.use(function (request, response, next) {
+//   response.header("Access-Control-Allow-Origin", "*");
+//   response.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
 const PORT = process.env.PORT || 5000;
 
