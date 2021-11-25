@@ -22,7 +22,7 @@ app.use(function (request, response, next) {
 const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
-  res.send("Running");
+  res.send("Running ok");
 });
 
 // Socket
