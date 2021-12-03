@@ -28,8 +28,14 @@ app.get("/", (req, res) => {
 // Socket
 io.on("connection", (socket) => {
   console.log(`New User connected: ${socket.id}`);
+  var channelName = "";
 
   socket.on("disconnect", () => {
+    console.log("disconnect channelName! ", channelName);
+    socket.broadcast
+      .to(channelName)
+      .emit("receive-user-leave", { userId: socket.id, userName: [socket.id] });
+
     socket.disconnect();
     console.log("User disconnected!");
   });
@@ -52,6 +58,7 @@ io.on("connection", (socket) => {
    */
   socket.on("join-room", ({ roomId, userName }) => {
     // Socket Join RoomName
+    channelName = roomId;
     socket.join(roomId);
     socketList[socket.id] = { userName, video: true, audio: true };
 
@@ -85,9 +92,9 @@ io.on("connection", (socket) => {
 
   socket.on("call-user-leave", ({ roomId, leaver }) => {
     delete socketList[socket.id];
-    socket.broadcast
-      .to(roomId)
-      .emit("receive-user-leave", { userId: socket.id, userName: [socket.id] });
+    // socket.broadcast
+    //   .to(roomId)
+    //   .emit("receive-user-leave", { userId: socket.id, userName: [socket.id] });
     io.sockets.sockets[socket.id].leave(roomId);
   });
 
